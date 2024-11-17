@@ -1,3 +1,3 @@
 export default function Page() {
-    return <> Welcome to the Invoice pages. </>
+    return <> Welcome to the Invoices pages. </>
 }
