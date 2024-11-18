@@ -27,7 +27,28 @@ export default async function createInvoice(formdata: FormData) {
 
     await sql `
         INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${customerId}, ${amount}, ${status}, ${date})
+        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+    `;
+
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
+}
+
+const UpdateInvoice= formSchema.omit({id: true, date: true});
+
+export async function updateInvoice(id: string, formdata: FormData) {
+    const {customerId, amount, status}= UpdateInvoice.parse({
+        customerId: formdata.get('customerId'),
+        amount: formdata.get('amount'),
+        status: formdata.get('status')
+    });
+
+    const amountInCents= amount * 100;
+
+    await sql `
+        UPDATE invoices
+        SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+        WHERE id = ${id}
     `;
 
     revalidatePath('/dashboard/invoices');
