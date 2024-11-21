@@ -3,6 +3,7 @@ import { z } from "zod";
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { error } from "console";
 // import { error } from "console";
 
 export type State= {
@@ -67,12 +68,21 @@ export default async function createInvoice(prevState: State, formdata: FormData
 
 const UpdateInvoice= formSchema.omit({id: true, date: true});
 
-export async function updateInvoice(id: string, formdata: FormData) {
-    const {customerId, amount, status}= UpdateInvoice.parse({
+export async function updateInvoice(id: string, prevState: State, formdata: FormData) {
+    const validatedFields= UpdateInvoice.safeParse({
         customerId: formdata.get('customerId'),
         amount: formdata.get('amount'),
         status: formdata.get('status')
     });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Some required fields are empty. Failed to update invoice.'
+        };
+    }
+
+    const {customerId, amount, status}= validatedFields.data;
 
     const amountInCents= amount * 100;
 
