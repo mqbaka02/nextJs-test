@@ -1,8 +1,6 @@
-// import { Card } from "../../ui/dashboard/cards";
 import RevenueChart from "../../ui/dashboard/revenue-chart";
 import LatestInvoices from "../../ui/dashboard/latest-invoices";
 import { lusitana } from "../../ui/fonts";
-// import { fetchCardData } from "../../lib/data";
 import { Suspense } from "react";
 
 import { RevenueChartSkeleton } from "@/app/ui/skeletons";
@@ -10,6 +8,12 @@ import { LatestInvoicesSkeleton } from "@/app/ui/skeletons";
 import { CardsSkeleton } from "@/app/ui/skeletons";
 
 import CardWrapper from "../../ui/dashboard/cards";
+
+import { Metadata } from "next";
+
+export const metadata: Metadata= {
+    title: "Dashboard"
+};
 
 
 export default async function Page() {
